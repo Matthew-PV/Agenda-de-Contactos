@@ -29,4 +29,10 @@ public class Contacto {
         sb.append(nombre).append(": ").append(numeroDeTelefono);
         return sb.toString();
     }
+    public boolean equals(Object object) {
+        Contacto contacto = (Contacto) object;
+        if (object == null) {return false;}
+        else if (contacto.equals(object)) {return true;}
+        else {return false;}
+    }
 }

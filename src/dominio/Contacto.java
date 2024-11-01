@@ -1,11 +1,20 @@
 package dominio;
+import java.io.Serializable;
 import java.lang.StringBuilder;
 
-public class Contacto {
-    private String nombre, numeroDeTelefono;
+public class Contacto implements Serializable {
+    private String nombre, apellido, numeroDeTelefono;
+
+
+    //Constructores
     public Contacto() {}
     public Contacto(String nombre, String numeroDeTelefono) {
         this.nombre = nombre;
+        this.numeroDeTelefono = numeroDeTelefono;
+    }
+    public Contacto(String nombre, String apellido, String numeroDeTelefono) {
+        this.nombre = nombre;
+        this.apellido = apellido;
         this.numeroDeTelefono = numeroDeTelefono;
     }
 
@@ -16,6 +25,11 @@ public class Contacto {
         this.nombre = nombre;
         return this;
     }
+    public String getApellido() {return apellido;}
+    public Contacto setApellido(String apellido) {
+        this.apellido = apellido;
+        return this;
+    }
     public String getNumeroDeTelefono() {return numeroDeTelefono;}
     public Contacto setNumeroDeTelefono(String numeroDeTelefono) {
         this.numeroDeTelefono = numeroDeTelefono;
@@ -24,15 +38,23 @@ public class Contacto {
 
 
     //Métodos de Contacto
+    public boolean equals(Object object) {
+        if (object == null) {return false;}
+        if (this.getClass() != object.getClass()) {return false;}
+        Contacto contacto = (Contacto) object;
+        return nombre.equals(contacto.nombre);
+    }
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(nombre).append(": ").append(numeroDeTelefono);
+        if (apellido == null) {
+            sb.append(nombre).append(": ").append(numeroDeTelefono);
+        }
+        else {
+            sb.append(nombre).append(' ').append(apellido).append(": ").append(numeroDeTelefono);
+        }
         return sb.toString();
     }
-    public boolean equals(Object object) {
-        Contacto contacto = (Contacto) object;
-        if (object == null) {return false;}
-        else if (contacto.equals(object)) {return true;}
-        else {return false;}
+    public int hashCode() {
+        return (nombre.hashCode()-1)*33+apellido.hashCode();
     }
 }

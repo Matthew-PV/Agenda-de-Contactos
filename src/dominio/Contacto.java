@@ -7,7 +7,14 @@ public class Contacto implements Serializable {
 
 
     //Constructores
-    public Contacto() {}
+    public Contacto() {
+        nombre = "";
+        numeroDeTelefono = "";
+    }
+    public Contacto(String nombre) {
+        this.nombre = nombre;
+        numeroDeTelefono = "";
+    }
     public Contacto(String nombre, String numeroDeTelefono) {
         this.nombre = nombre;
         this.numeroDeTelefono = numeroDeTelefono;

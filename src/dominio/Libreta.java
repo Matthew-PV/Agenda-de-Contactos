@@ -12,6 +12,7 @@ public class Libreta implements Serializable {
 
     //Constructores
     public Libreta() {
+        nombre = "";
         Contactos = new ArrayList<>();
         Libretas.add(this);
     }
@@ -28,6 +29,8 @@ public class Libreta implements Serializable {
     }
 
     public Libreta setNombre(String nombre) {
+        File file = new File(this.nombre+".ser");
+        if (file.exists()) file.renameTo(new File(nombre + ".ser"));
         this.nombre = nombre;
         return this;
     }
@@ -52,7 +55,6 @@ public class Libreta implements Serializable {
         this.Contactos = Contactos;
         return this;
     }
-
     public Contacto getContacto(int index) {
         return Contactos.get(index);
     }
@@ -71,6 +73,27 @@ public class Libreta implements Serializable {
             return Contactos.get(index);
         }
     }
+    /*  Versión alternativa del método remove
+    public boolean remove(Contacto contacto) {
+        int index = Contactos.indexOf(contacto);
+        if (index != -1) {
+            Contactos.remove(index);
+            return true;
+        }
+        return false;
+    }
+    */
+    public boolean borrarContacto(Contacto contacto) {
+            if (Contactos.contains(contacto)) {
+                if (Interfaz.confirmacion("¿Estás seguro de que quieres borrar a "+contacto.getNombre()+"?")) {
+                    Contactos.remove(contacto);
+                    return true;
+                }
+            } else {
+                System.out.println("Contacto no encontrado.");
+            }
+        return false;
+    }
 
 
     //Métodos de Libreta
@@ -88,8 +111,8 @@ public class Libreta implements Serializable {
     public void grabar() {
         try {
             File file = new File(nombre+".ser");
-            ObjectOutputStream fo = new ObjectOutputStream(new FileOutputStream(nombre + ".ser"));
             if (file.exists()) {
+                ObjectOutputStream fo = new ObjectOutputStream(new FileOutputStream(nombre + ".ser"));
                 if (Interfaz.confirmacion("Ya existe una libreta llamada " +
                         nombre + ". ¿Quieres sobreescribirla?")) {
                     file.delete();
@@ -98,6 +121,7 @@ public class Libreta implements Serializable {
                 }
             }
             else {
+                ObjectOutputStream fo = new ObjectOutputStream(new FileOutputStream(nombre + ".ser"));
                 fo.writeObject(this);
                 fo.close();
             }
@@ -105,6 +129,15 @@ public class Libreta implements Serializable {
             System.out.println("Error de escritura.");
         }
     }
+    public boolean borrar() {
+        if (Interfaz.confirmacion("¿Estás seguro de que quieres borrar "+nombre+"?")) {
+            File file = new File(nombre + ".ser");
+            file.delete();
+            return true;
+        }
+        return false;
+    }
+
     public boolean equals(Object object) {
         if (object == null) {return false;}
         if (this.getClass() != object.getClass()) {return false;}
@@ -128,5 +161,8 @@ public class Libreta implements Serializable {
         } else {
             return "No hay contactos en la libreta.";
         }
+    }
+    public int hashCode() {
+        return (nombre.hashCode()-1)*33;
     }
 }

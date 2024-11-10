@@ -58,6 +58,16 @@ public class Libreta implements Serializable {
     public Contacto getContacto(int index) {
         return Contactos.get(index);
     }
+    public Contacto getContacto(String nombre) {
+        Contacto contacto = new Contacto(nombre);
+        if (Contactos.contains(contacto)) return Contactos.get(Contactos.indexOf(contacto));
+        else return new Contacto();
+    }
+    public Contacto getContacto(String nombre, String apellido) {
+        Contacto contacto = new Contacto(nombre, apellido);
+        if (Contactos.contains(contacto)) return Contactos.get(Contactos.indexOf(contacto));
+        else return new Contacto();
+    }
     public Libreta add(Contacto contacto) {
         Contactos.add(contacto);
         return this;
@@ -85,7 +95,8 @@ public class Libreta implements Serializable {
     */
     public boolean borrarContacto(Contacto contacto) {
             if (Contactos.contains(contacto)) {
-                if (Interfaz.confirmacion("¿Estás seguro de que quieres borrar a "+contacto.getNombre()+"?")) {
+                contacto = Contactos.get(Contactos.indexOf(contacto));
+                if (Interfaz.confirmacion("¿Estás seguro de que quieres borrar a "+contacto+"?")) {
                     Contactos.remove(contacto);
                     return true;
                 }
@@ -94,22 +105,45 @@ public class Libreta implements Serializable {
             }
         return false;
     }
-    public boolean modificarContacto(Contacto contacto,String[] modificacion) throws ArrayIndexOutOfBoundsException {
+    public boolean modificarContacto(Contacto contacto,String[] modificacion)
+            throws ArrayIndexOutOfBoundsException {
+
         boolean res = true;
+        String instruccion = modificacion[0]; String valor = modificacion[1];
         if (Contactos.contains(contacto)) {
-            if (modificacion[0].equalsIgnoreCase("nombre")) {
-                contacto.setNombre(modificacion[1]);
-            }
-            else if (modificacion[0].equalsIgnoreCase("apellido")) {
-                contacto.setApellido(modificacion[1]);
-            }
-            else if (modificacion[0].equalsIgnoreCase("numeroDeTelefono") ||
-                    modificacion[0].equalsIgnoreCase("telefono")) {
-                contacto.setNumeroDeTelefono(modificacion[1]);
-            }
-            else {
-                System.out.println("Atributo incorrecto.");
-                res = false;
+            contacto = Contactos.get(Contactos.indexOf(contacto));
+
+            if (Interfaz.confirmacion("¿Estás seguro de que quieres modificar a "+contacto+"?")) {
+
+                if (instruccion.equalsIgnoreCase("nombre"))
+                    contacto.setNombre(valor);
+
+                else if (instruccion.equalsIgnoreCase("apellido"))
+                    contacto.setApellido(valor);
+
+                else if (instruccion.equalsIgnoreCase("numeroDeTelefono") ||
+                instruccion.equalsIgnoreCase("telefono") ||
+                instruccion.equalsIgnoreCase("numero"))
+                contacto.setNumeroDeTelefono(valor);
+
+                else if (instruccion.equalsIgnoreCase("quitar")) { //Atributos que se pueden quitar
+                    if (valor.equalsIgnoreCase("apellido"))
+                        contacto.quitarApellido();
+                    else if (valor.equalsIgnoreCase("numeroDeTelefono") ||
+                            valor.equalsIgnoreCase("telefono") ||
+                            valor.equalsIgnoreCase("numero"))
+                        contacto.quitarTelefono();
+                    else {
+                        System.out.println("Atributo incorrecto.");
+                        res = false;
+                    }
+                }
+
+                else {
+                    System.out.println("Atributo incorrecto.");
+                    res = false;
+                }
+
             }
         } else {
             System.out.println("Contacto no encontrado.");

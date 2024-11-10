@@ -28,8 +28,10 @@ public class Interfaz {
     public String listaOpciones() {
         StringBuilder sb = new StringBuilder("Lista de opciones de "+libreta.getNombre()+"\n");
         sb.append("\t1. añadir <nombre> <apellido(opcional)> <teléfono>: Añade un contacto a la libreta.\n")
-                .append("\t2. modificar <nombreContacto> <atributo a modificar> <nuevoValor>: " +
-                        "Cambia un valor para un determinado contacto.\n")
+                .append("""
+                        \t2. modificar <nombre> <apellido(opcional)> <(atributo a modificar)/quitar> <valor/(atributo a quitar)>:
+                        \t\tCambia un valor para un determinado contacto. Se pueden quitar el apellido y el teléfono.
+                        """)
                 .append("\t3. borrar <nombre> <apellido(opcinal)>: Borra un contacto de la libreta.\n")
                 .append("\t4. cambiarNombre <nuevo nombre>: Cambia el nombre de la libreta.\n")
                 .append("\t5. lista: Muestra la lista de contactos.\n")
@@ -37,7 +39,7 @@ public class Interfaz {
                 .append("\t7. borrarLibreta: Borra la libreta (Este cambio no puede deshacerse).\n")
                 .append("\t8. cambiarLibreta <nombre de la libreta>: Cambia la libreta sobre la que se trabaja.\n")
                 .append("\t9. salir: Sale del programa.\n")
-                .append("\tPor favor, introduzca las instrucciones sin espacios adicionales.\n");
+                .append("Por favor, introduzca las instrucciones sin espacios adicionales.\n");
         return sb.toString();
     }
     public String leerPeticion() {
@@ -89,7 +91,12 @@ public class Interfaz {
     }
     public boolean modificar(String[] peticion) {
         try {
-
+            if (peticion.length <= 4) //Contacto sin apellido
+                 libreta.modificarContacto(new Contacto(peticion[1]),
+                         new String[]{peticion[2], peticion[3]});
+            else //Contacto con apellido
+                libreta.modificarContacto(new Contacto(peticion[1],peticion[2], ""),
+                        new String[]{peticion[3], peticion[4]});
         } catch(ArrayIndexOutOfBoundsException e) {
                 /* Dará este error cuando el usuario haya introducido menos o más datos de los necesarios,
                 pues "peticion[]" será más o menos corta que lo que la creación del contacto requiere. */

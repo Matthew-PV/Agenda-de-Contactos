@@ -69,7 +69,8 @@ public class Libreta implements Serializable {
         else return new Contacto();
     }
     public Libreta add(Contacto contacto) {
-        Contactos.add(contacto);
+        if (Contactos.contains(contacto)) System.out.println("Este contacto ya existe.");
+            else Contactos.add(contacto);
         return this;
     }
     public int size() {

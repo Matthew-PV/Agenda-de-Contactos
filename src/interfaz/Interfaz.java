@@ -28,13 +28,15 @@ public class Interfaz {
     public String listaOpciones() {
         StringBuilder sb = new StringBuilder("Lista de opciones de "+libreta.getNombre()+"\n");
         sb.append("\t1. añadir <nombre> <apellido(opcional)> <teléfono>: Añade un contacto a la libreta.\n")
-                .append("\t2. borrar <nombre> <apellido(opcinal)>: Borra un contacto de la libreta.\n")
-                .append("\t3. cambiarNombre <nuevo nombre>: Cambia el nombre de la libreta.\n")
-                .append("\t4. lista: Muestra la lista de contactos.\n")
-                .append("\t5. grabar: Guarda la libreta de contactos.\n")
-                .append("\t6. borrarLibreta: Borra la libreta (Este cambio no puede deshacerse).\n")
-                .append("\t7. cambiarLibreta <nombre de la libreta>: Cambia la libreta sobre la que se trabaja.\n")
-                .append("\t8. salir: Sale del programa.\n")
+                .append("\t2. modificar <nombreContacto> <atributo a modificar> <nuevoValor>: " +
+                        "Cambia un valor para un determinado contacto.\n")
+                .append("\t3. borrar <nombre> <apellido(opcinal)>: Borra un contacto de la libreta.\n")
+                .append("\t4. cambiarNombre <nuevo nombre>: Cambia el nombre de la libreta.\n")
+                .append("\t5. lista: Muestra la lista de contactos.\n")
+                .append("\t6. grabar: Guarda la libreta de contactos.\n")
+                .append("\t7. borrarLibreta: Borra la libreta (Este cambio no puede deshacerse).\n")
+                .append("\t8. cambiarLibreta <nombre de la libreta>: Cambia la libreta sobre la que se trabaja.\n")
+                .append("\t9. salir: Sale del programa.\n")
                 .append("\tPor favor, introduzca las instrucciones sin espacios adicionales.\n");
         return sb.toString();
     }
@@ -46,7 +48,8 @@ public class Interfaz {
     public boolean procesandoPeticion(String entrada) {
         String[] peticion = entrada.split("\\s+");
         if (peticion[0].equalsIgnoreCase("añadir")) return add(peticion);
-        else if(peticion[0].equalsIgnoreCase("borrar")) return borrar(peticion);
+        else if (peticion[0].equalsIgnoreCase("modificar")) return modificar(peticion);
+        else if (peticion[0].equalsIgnoreCase("borrar")) return borrar(peticion);
         else if (peticion[0].equalsIgnoreCase("cambiarNombre")) return cambiarNombre(peticion);
         else if (peticion[0].equalsIgnoreCase("lista" )) return lista();
         else if (peticion[0].equalsIgnoreCase("grabar")) return grabar();
@@ -76,6 +79,17 @@ public class Interfaz {
             else { //Contacto con apellido
                 libreta.add(new Contacto(peticion[1],peticion[2],peticion[3]));
             }
+        } catch(ArrayIndexOutOfBoundsException e) {
+                /* Dará este error cuando el usuario haya introducido menos o más datos de los necesarios,
+                pues "peticion[]" será más o menos corta que lo que la creación del contacto requiere. */
+            System.out.println("Por favor, introduce la información con los espacios indicados.");
+        }
+        System.out.println();
+        return true;
+    }
+    public boolean modificar(String[] peticion) {
+        try {
+
         } catch(ArrayIndexOutOfBoundsException e) {
                 /* Dará este error cuando el usuario haya introducido menos o más datos de los necesarios,
                 pues "peticion[]" será más o menos corta que lo que la creación del contacto requiere. */

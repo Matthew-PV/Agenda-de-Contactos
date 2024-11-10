@@ -94,6 +94,29 @@ public class Libreta implements Serializable {
             }
         return false;
     }
+    public boolean modificarContacto(Contacto contacto,String[] modificacion) throws ArrayIndexOutOfBoundsException {
+        boolean res = true;
+        if (Contactos.contains(contacto)) {
+            if (modificacion[0].equalsIgnoreCase("nombre")) {
+                contacto.setNombre(modificacion[1]);
+            }
+            else if (modificacion[0].equalsIgnoreCase("apellido")) {
+                contacto.setApellido(modificacion[1]);
+            }
+            else if (modificacion[0].equalsIgnoreCase("numeroDeTelefono") ||
+                    modificacion[0].equalsIgnoreCase("telefono")) {
+                contacto.setNumeroDeTelefono(modificacion[1]);
+            }
+            else {
+                System.out.println("Atributo incorrecto.");
+                res = false;
+            }
+        } else {
+            System.out.println("Contacto no encontrado.");
+            res = false;
+        }
+        return res;
+    }
 
 
     //Métodos de Libreta

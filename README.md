@@ -1,4 +1,5 @@
-# Agenda-de-Contactos
+# Agenda de Contactos
+### *Creado por Matthew Puente-Villegas*
 Repositorio que maneja libretas de contactos.
 ## Funcionalidades actuales
 - Creación, modificación y eliminación de **contactos y libretas**.

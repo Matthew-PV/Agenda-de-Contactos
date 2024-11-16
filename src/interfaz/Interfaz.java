@@ -1,11 +1,13 @@
 package interfaz;
 import dominio.*;
-
 import java.io.File;
 import java.util.Scanner;
 
 public class Interfaz {
     private Libreta libreta;
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_CIAN = "\u001B[36m";
+    public static final String ANSI_MORADO = "\u001B[35m";
     private static final Scanner teclado = new Scanner(System.in);
     public Interfaz() {}
 
@@ -26,7 +28,8 @@ public class Interfaz {
         } while (procesandoPeticion(peticion));
     }
     public String listaOpciones() {
-        StringBuilder sb = new StringBuilder("Lista de opciones de "+libreta.getNombre()+"\n");
+        StringBuilder sb = new StringBuilder(ANSI_CIAN+"Lista de opciones de "
+                +ANSI_MORADO+libreta.getNombre()+ANSI_RESET+"\n");
         sb.append("\t1. añadir <nombre> <apellido(opcional)> <teléfono>: Añade un contacto a la libreta.\n")
                 .append("""
                         \t2. modificar <nombre> <apellido(opcional)> <(atributo a modificar)/quitar> <valor/(atributo a quitar)>:
@@ -50,7 +53,8 @@ public class Interfaz {
     public boolean procesandoPeticion(String entrada) {
         String[] peticion = entrada.split("\\s+");
         if (peticion[0].equalsIgnoreCase("añadir")) return add(peticion);
-        else if (peticion[0].equalsIgnoreCase("modificar")) return modificar(peticion);
+        else if (peticion[0].equalsIgnoreCase("modificar") ||
+                peticion[0].equalsIgnoreCase("cambiar")) return modificar(peticion);
         else if (peticion[0].equalsIgnoreCase("borrar")) return borrar(peticion);
         else if (peticion[0].equalsIgnoreCase("cambiarNombre")) return cambiarNombre(peticion);
         else if (peticion[0].equalsIgnoreCase("lista" )) return lista();
@@ -86,6 +90,9 @@ public class Interfaz {
                 pues "peticion[]" será más o menos corta que lo que la creación del contacto requiere. */
             System.out.println("Por favor, introduce la información con los espacios indicados.");
         }
+        catch (ContactDuplicated e) {
+            System.out.println(e.nombreContacto()+" "+e.apellidoContacto()+" ya existe.");
+        }
         System.out.println();
         return true;
     }
@@ -101,6 +108,9 @@ public class Interfaz {
                 /* Dará este error cuando el usuario haya introducido menos o más datos de los necesarios,
                 pues "peticion[]" será más o menos corta que lo que la creación del contacto requiere. */
             System.out.println("Por favor, introduce la información con los espacios indicados.");
+        }
+        catch(ContactNotFound e) {
+            System.out.println(e.nombreContacto()+" "+e.apellidoContacto()+" no encontrado.");
         }
         System.out.println();
         return true;
@@ -122,6 +132,10 @@ public class Interfaz {
             System.out.println("Por favor, introduce la información con los espacios indicados.");
             System.out.println();
         }
+        catch(ContactNotFound e) {
+            System.out.println(e.nombreContacto()+" "+e.apellidoContacto()+" no encontrado.");
+        }
+        System.out.println();
         return true;
     }
     private boolean cambiarNombre(String[] peticion) {

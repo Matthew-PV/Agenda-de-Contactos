@@ -68,8 +68,8 @@ public class Libreta implements Serializable {
         if (Contactos.contains(contacto)) return Contactos.get(Contactos.indexOf(contacto));
         else return new Contacto();
     }
-    public Libreta add(Contacto contacto) {
-        if (Contactos.contains(contacto)) System.out.println("Este contacto ya existe.");
+    public Libreta add(Contacto contacto) throws ContactDuplicated {
+        if (Contactos.contains(contacto)) throw new ContactDuplicated(contacto);
             else Contactos.add(contacto);
         return this;
     }
@@ -94,20 +94,18 @@ public class Libreta implements Serializable {
         return false;
     }
     */
-    public boolean borrarContacto(Contacto contacto) {
+    public boolean borrarContacto(Contacto contacto) throws ContactNotFound{
             if (Contactos.contains(contacto)) {
                 contacto = Contactos.get(Contactos.indexOf(contacto));
                 if (Interfaz.confirmacion("¿Estás seguro de que quieres borrar a "+contacto+"?")) {
                     Contactos.remove(contacto);
                     return true;
                 }
-            } else {
-                System.out.println("Contacto no encontrado.");
-            }
+            } else throw new ContactNotFound(contacto);
         return false;
     }
     public boolean modificarContacto(Contacto contacto,String[] modificacion)
-            throws ArrayIndexOutOfBoundsException {
+            throws ArrayIndexOutOfBoundsException, ContactNotFound {
 
         boolean res = true;
         String instruccion = modificacion[0]; String valor = modificacion[1];
@@ -146,10 +144,7 @@ public class Libreta implements Serializable {
                 }
 
             }
-        } else {
-            System.out.println("Contacto no encontrado.");
-            res = false;
-        }
+        } else throw new ContactNotFound(contacto);
         return res;
     }
 

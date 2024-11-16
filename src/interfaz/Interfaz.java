@@ -7,6 +7,8 @@ public class Interfaz {
     private Libreta libreta;
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_CIAN = "\u001B[36m";
+    public static final String ANSI_AZUL = "\u001B[34m";
+    public static final String ANSI_AMARILLO = "\u001B[33m";
     public static final String ANSI_MORADO = "\u001B[35m";
     private static final Scanner teclado = new Scanner(System.in);
     public Interfaz() {}
@@ -29,19 +31,18 @@ public class Interfaz {
     }
     public String listaOpciones() {
         StringBuilder sb = new StringBuilder(ANSI_CIAN+"Lista de opciones de "
-                +ANSI_MORADO+libreta.getNombre()+ANSI_RESET+"\n");
-        sb.append("\t1. añadir <nombre> <apellido(opcional)> <teléfono>: Añade un contacto a la libreta.\n")
-                .append("""
-                        \t2. modificar <nombre> <apellido(opcional)> <(atributo a modificar)/quitar> <valor/(atributo a quitar)>:
-                        \t\tCambia un valor para un determinado contacto. Se pueden quitar el apellido y el teléfono.
-                        """)
-                .append("\t3. borrar <nombre> <apellido(opcinal)>: Borra un contacto de la libreta.\n")
-                .append("\t4. cambiarNombre <nuevo nombre>: Cambia el nombre de la libreta.\n")
-                .append("\t5. lista: Muestra la lista de contactos.\n")
-                .append("\t6. grabar: Guarda la libreta de contactos.\n")
-                .append("\t7. borrarLibreta: Borra la libreta (Este cambio no puede deshacerse).\n")
-                .append("\t8. cambiarLibreta <nombre de la libreta>: Cambia la libreta sobre la que se trabaja.\n")
-                .append("\t9. salir: Sale del programa.\n")
+                +ANSI_AMARILLO+libreta.getNombre()+ANSI_RESET+"\n");
+        sb.append("\t1. "+ANSI_CIAN+"añadir"+ANSI_AZUL+" <nombre> <apellido(opcional)> <teléfono>"+ANSI_RESET+": " +
+                        "Añade un contacto a la libreta.\n")
+                .append("\t2. "+ANSI_CIAN+"modificar"+ANSI_AZUL+" <nombre> <apellido(opcional)> <(atributo a modificar)/quitar> <valor/(atributo a quitar)>"+ANSI_RESET+":\n" +
+                        "\t\tCambia un valor para un determinado contacto. Se pueden quitar el apellido y el teléfono.\n")
+                .append("\t3. "+ANSI_CIAN+"borrar"+ANSI_AZUL+" <nombre> <apellido(opcinal)>"+ANSI_RESET+": Borra un contacto de la libreta.\n")
+                .append("\t4. "+ANSI_CIAN+"lista"+ANSI_RESET+": Muestra la lista de contactos.\n")
+                .append("\t5. "+ANSI_MORADO+"cambiarNombre"+ANSI_AZUL+" <nuevo nombre>"+ANSI_RESET+": Cambia el nombre de la libreta.\n")
+                .append("\t6. "+ANSI_MORADO+"grabar"+ANSI_RESET+": Guarda la libreta de contactos.\n")
+                .append("\t7. "+ANSI_MORADO+"borrarLibreta"+ANSI_RESET+": Borra la libreta (Este cambio no puede deshacerse).\n")
+                .append("\t8. "+ANSI_MORADO+"cambiarLibreta"+ANSI_AZUL+" <nombre de la libreta>"+ANSI_RESET+": Cambia la libreta sobre la que se trabaja.\n")
+                .append("\t9. "+ANSI_AMARILLO+"salir"+ANSI_RESET+": Sale del programa.\n")
                 .append("Por favor, introduzca las instrucciones sin espacios adicionales.\n");
         return sb.toString();
     }
@@ -56,8 +57,8 @@ public class Interfaz {
         else if (peticion[0].equalsIgnoreCase("modificar") ||
                 peticion[0].equalsIgnoreCase("cambiar")) return modificar(peticion);
         else if (peticion[0].equalsIgnoreCase("borrar")) return borrar(peticion);
-        else if (peticion[0].equalsIgnoreCase("cambiarNombre")) return cambiarNombre(peticion);
         else if (peticion[0].equalsIgnoreCase("lista" )) return lista();
+        else if (peticion[0].equalsIgnoreCase("cambiarNombre")) return cambiarNombre(peticion);
         else if (peticion[0].equalsIgnoreCase("grabar")) return grabar();
         else if (peticion[0].equalsIgnoreCase("borrarLibreta")) return borrarLibreta();
         else if (peticion[0].equalsIgnoreCase("cambiarLibreta")) return cambiarLibreta(peticion);
@@ -119,23 +120,24 @@ public class Interfaz {
         try {
             if (peticion.length <= 2) { //Contacto sin apellido
                 libreta.borrarContacto(new Contacto(peticion[1]));
-                System.out.println();
             }
             else { //Contacto con apellido
                 libreta.borrarContacto(new Contacto(peticion[1],peticion[2],""));
-                System.out.println();
             }
         }
         catch(ArrayIndexOutOfBoundsException e) {
                 /* Dará este error cuando el usuario haya introducido menos o más datos de los necesarios,
                 pues "peticion[]" será más o menos corta que lo que la creación del contacto requiere. */
             System.out.println("Por favor, introduce la información con los espacios indicados.");
-            System.out.println();
         }
         catch(ContactNotFound e) {
             System.out.println(e.nombreContacto()+" "+e.apellidoContacto()+" no encontrado.");
         }
         System.out.println();
+        return true;
+    }
+    private boolean lista() {
+        System.out.println(libreta+"\n");
         return true;
     }
     private boolean cambiarNombre(String[] peticion) {
@@ -144,10 +146,6 @@ public class Interfaz {
             libreta.setNombre(peticion[1]);
         }
         System.out.println();
-        return true;
-    }
-    private boolean lista() {
-        System.out.println(libreta+"\n");
         return true;
     }
     private boolean grabar() {
